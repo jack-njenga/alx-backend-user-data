@@ -30,19 +30,19 @@ def filtering_request() -> None:
     path_list = ['/api/v1/status/',
                  '/api/v1/unauthorized/',
                  '/api/v1/forbidden/']
-    state = auth.require_auth(request.path, path_list)
-    if (auth is None):
-        pass
-    if state is True:
-        auths_info = auth.authorization_header(request)
-        print(auths_info)
-        if auths_info is None:
-            abort(401)
-        else:
-            user = auth.current_user(request)
-            print(user)
-            if user is None:
-                abort(403)
+
+    if auth:
+        state = auth.require_auth(request.path, path_list)
+        if state is True:
+            auths_info = auth.authorization_header(request)
+            print(auths_info)
+            if auths_info is None:
+                abort(401)
+            else:
+                user = auth.current_user(request)
+                print(user)
+                if user is None:
+                    abort(403)
 
 
 @app.errorhandler(404)
