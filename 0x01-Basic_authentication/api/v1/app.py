@@ -33,14 +33,15 @@ def filtering_request() -> None:
 
     if auth:
         state = auth.require_auth(request.path, path_list)
-        if state is True:
+        if state:
             auths_info = auth.authorization_header(request)
-            print(auths_info)
+            # print(auths_info)
+            # print(auth)
             if auths_info is None:
                 abort(401)
             else:
                 user = auth.current_user(request)
-                print(user)
+                # print(user)
                 if user is None:
                     abort(403)
 
