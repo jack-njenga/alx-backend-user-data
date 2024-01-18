@@ -34,21 +34,21 @@ def filtering_request() -> None:
     """
     path_list = ['/api/v1/status/',
                  '/api/v1/unauthorized/',
-                 '/api/v1/forbidden/']
+                 '/api/v1/forbidden/',
+                 '/api/v1/auth_session/login/']
 
     if auth:
         state = auth.require_auth(request.path, path_list)
         if state:
             auths_info = auth.authorization_header(request)
-            # print(auths_info)
+            session_info = auth.session_cookie(request)
             # print(auth)
-            if auths_info is None:
+            if auths_info is None and session_info is None:
                 abort(401)
             else:
-                user = auth.current_user(request)
-                request.current_user = user
+                request.current_user = auth.current_user(request)
                 # print(user)
-                if user is None:
+                if request.current_user is None:
                     abort(403)
 
 
