@@ -53,15 +53,9 @@ class Auth():
         """
         try:
             user = self._db.find_user_by(**{"email": email})
-            if user:
-                provided_pwd = password.encode("utf-8")
-                state = checkpw(provided_pwd, user.hashed_password)
-                return state
-            else:
-                return False
+            return checkpw(password.encode('utf-8'), user.hashed_password)
         except (NoResultFound, InvalidRequestError):
             return False
-        return False
 
     def create_session(self, email: str) -> str:
         """
