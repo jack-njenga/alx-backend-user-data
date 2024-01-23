@@ -41,7 +41,7 @@ class DB:
         new_user = User(email=email, hashed_password=hashed_password)
         self._session.add(new_user)
         self._session.commit()
-        print(f"--S--(SAVED): {new_user.email}")
+        # print(f"--S--(SAVED): {new_user.email}")
 
         return new_user
 
