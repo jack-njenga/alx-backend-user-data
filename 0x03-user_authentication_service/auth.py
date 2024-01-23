@@ -10,11 +10,11 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
 
 
-def _hash_password(pwd: str) -> bytes:
+def _hash_password(password: str) -> bytes:
     """
     pwd hashing
     """
-    return hashpw(pwd.encode("utf-8"), gensalt())
+    return hashpw(password.encode("utf-8"), gensalt())
 
 
 class Auth():
