@@ -7,6 +7,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from user import Base, User
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
 
 
 class DB:
@@ -41,3 +43,32 @@ class DB:
         self._session.commit()
 
         return new_user
+
+    def find_user_by(self, **kwargs) -> User:
+        """
+        This method takes in arbitrary keyword arguments
+        and returns the first row found in the users table
+        as filtered by the method’s input arguments.
+        No validations needed
+        """
+        for key in kwargs.keys():
+            if not hasattr(User, key):
+                raise InvalidRequestError
+        user = self._session.query(User).filter_by(**kwargs).first()
+        if user:
+            return user
+        else:
+            raise NoResultFound
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """
+        Updates the user’s attributes as passed in the
+        method’s arguments then commit changes to the database.
+        """
+        user = self.find_user_by(**{"id": user_id})
+        for key, val in kwargs.items():
+            if hasattr(User, key):
+                setattr(user, key, val)
+            else:
+                raise ValueError
+        self._session.commit()
